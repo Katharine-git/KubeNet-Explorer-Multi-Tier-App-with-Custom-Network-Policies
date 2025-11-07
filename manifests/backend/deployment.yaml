@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: praqma/network-multitool
+          env:
+          - name: MONGO_URL
+            value: "mongodb://database-service.database:27017"
+          ports:
+            - containerPort: 8080
