@@ -4,6 +4,113 @@ Networking is the backbone of Kubernetes.
 
 I've set up a mini-project that will help you setup a cluster from scratch, deploy resources and build a basic network within the cluster.
 
+#Steps to follow:
+🧩 Step-by-Step Deployment Guide
+🪴 1️⃣ Make Sure Your Cluster Is Running
+
+If you’re using Minikube:
+
+minikube start --driver=docker
+minikube addons enable ingress
+
+
+Then confirm:
+
+kubectl get nodes
+kubectl get pods -A
+
+
+You should see one node in Ready state and several kube-system pods running.
+
+📂 2️⃣ Clone and Enter the Project
+git clone https://github.com/<your-username>/k8s-networking-lab.git
+cd k8s-networking-lab
+
+🧾 3️⃣ Make the Script Executable
+
+Before running:
+
+chmod +x scripts/deploy.sh scripts/cleanup.sh
+
+🚀 4️⃣ Run the Deployment Script
+
+Now deploy everything:
+
+bash scripts/deploy.sh
+
+
+What this does:
+
+Creates the 3 namespaces (frontend, backend, database)
+
+Deploys MongoDB, Backend, and Frontend
+
+Applies NetworkPolicies
+
+Sets up Ingress for external access
+
+🧠 5️⃣ Verify Deployment
+
+Check everything is up:
+
+kubectl get pods -A
+kubectl get svc -A
+kubectl get ingress -A
+
+
+You should see:
+
+MongoDB in the database namespace
+
+Backend and Frontend pods running
+
+An ingress rule under the frontend namespace
+
+🌐 6️⃣ Access the Frontend
+
+Add this entry to your local /etc/hosts file:
+
+127.0.0.1  frontend.local
+
+
+Then open in your browser:
+👉 http://frontend.local
+
+You should see the default Nginx welcome page (served from your frontend pod via Ingress).
+
+🧩 7️⃣ Test Networking
+
+Use these commands to confirm isolation:
+
+✅ Backend → Database should succeed:
+
+kubectl exec -n backend -it $(kubectl get pod -n backend -l app=backend -o jsonpath='{.items[0].metadata.name}') -- ping mongodb.database.svc.cluster.local
+
+
+❌ Frontend → Database should fail:
+
+kubectl exec -n frontend -it $(kubectl get pod -n frontend -l app=frontend -o jsonpath='{.items[0].metadata.name}') -- ping mongodb.database.svc.cluster.local
+
+
+This confirms your NetworkPolicies are working.
+
+🧹 8️⃣ Cleanup When Done
+
+When you’re finished testing:
+
+bash scripts/cleanup.sh
+
+
+This deletes all namespaces and resets the cluster to a clean state.
+
+✅ Summary Flow
+Step	Command	Purpose
+1️⃣	minikube start	Start cluster
+2️⃣	bash scripts/deploy.sh	Deploy resources
+3️⃣	kubectl get pods -A	Verify running pods
+4️⃣	curl frontend.local	Test ingress
+5️⃣	bash scripts/cleanup.sh	Tear down lab
+#Expected outputs
 1. After Cluster Start
 
 Command:
