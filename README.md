@@ -4,7 +4,7 @@ Networking is the backbone of Kubernetes.
 
 I've set up a mini-project that will help you setup a cluster from scratch, deploy resources and build a basic network within the cluster.
 
-🧩 1️⃣ After Cluster Start
+1. After Cluster Start
 
 Command:
 
@@ -31,7 +31,7 @@ kubectl get nodes
 NAME       STATUS   ROLES           AGE   VERSION
 minikube   Ready    control-plane   1m    v1.30.0
 
-📦 2️⃣ After Running bash scripts/deploy.sh
+2. After Running bash scripts/deploy.sh
 
 You should see messages like:
 
@@ -61,7 +61,7 @@ ingress.networking.k8s.io/frontend-ingress created
 
 ✅ Deployment complete!
 
-🧠 3️⃣ Verify Pods and Services
+3. Verify Pods and Services
 
 Command:
 
@@ -88,7 +88,7 @@ database    mongodb      ClusterIP   10.96.32.11      27017/TCP        30s
 backend     backend      ClusterIP   10.96.88.42      8080/TCP         28s
 frontend    frontend     ClusterIP   10.96.54.23      80/TCP           25s
 
-🌐 4️⃣ Verify Ingress
+4. Verify Ingress
 
 Command:
 
@@ -114,7 +114,7 @@ The Nginx welcome page, or
 
 A simple “Frontend is running” message if you customized it.
 
-🔒 5️⃣ Network Policy Test
+5. Network Policy Test
 
 Backend → Database (✅ should succeed):
 
@@ -128,12 +128,12 @@ PING mongodb.database.svc.cluster.local (10.96.32.11): 56 data bytes
 64 bytes from 10.96.32.11: icmp_seq=1 ttl=64 time=0.625 ms
 
 
-Frontend → Database (❌ should fail):
+Frontend → Database (should fail):
 
 kubectl exec -n frontend -it $(kubectl get pod -n frontend -l app=frontend -o jsonpath='{.items[0].metadata.name}') -- ping -c 2 mongodb.database.svc.cluster.local
 
 
-❌ Expected:
+Expected:
 
 ping: mongodb.database.svc.cluster.local: Name or service not known
 command terminated with exit code 1
@@ -141,7 +141,7 @@ command terminated with exit code 1
 
 That’s the proof your NetworkPolicy is correctly isolating traffic.
 
-🧹 6️⃣ Cleanup
+6. Cleanup
 
 Command:
 
@@ -163,4 +163,4 @@ Cluster started	kubectl get nodes → Ready	✅
 Namespaces created	kubectl get ns	✅
 Pods running	kubectl get pods -A	✅
 Ingress reachable	Browser → frontend.local	✅
-NetworkPolicy working	Backend→DB ✅, Frontend→DB ❌
+NetworkPolicy working	Backend→DB ✅, Frontend→DB 
